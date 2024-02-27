@@ -12,12 +12,14 @@
 # setup
 
 - `npm create svelte@latest`
-- `npx svelte-add@latest tailwindcss --tailwindcss-daisyui`
+- `npx svelte-add@latest tailwindcss`
+- `tailwindcss-daisyui`
 - `npm install`
 - `npm run dev -- --open`
-- in *tailwind.config.cjs*:
+- in _tailwind.config.cjs_:
   ```
   daisyui:{
     themes:true,
   }
-- in *app.html*: `data-theme="..."`
+  ```
+- in _app.html_: `data-theme="..."`
