@@ -3,13 +3,9 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-let htmlString = ''; // This will hold your HTML string
-
-var webdriver = require('selenium-webdriver'),
-    By = webdriver.By,
-    until = webdriver.until;
-
-
+var webdriver = require('selenium-webdriver')
+const chrome = require('selenium-webdriver/chrome');
+By = webdriver.By
 
 const password = "WdNnE1969!";
 const email = "julia.rehbinder@gmail.com";
@@ -18,9 +14,13 @@ const email = "julia.rehbinder@gmail.com";
 app.use(cors());
 
 async function scrapeWebsite() {
+
+    // Set up the WebDriver
     var driver = new webdriver.Builder()
     .forBrowser('chrome')
+    .setChromeOptions(new chrome.Options().addArguments("--headless"))
     .build();
+
     // opens the website and enters email
     await driver.get('https://prmpul.eltern-portal.org');
 
@@ -33,25 +33,21 @@ async function scrapeWebsite() {
     // Clicks submit button
     await driver.findElement(By.xpath("//button[@type='submit']")).click();
 
-    // Navigates to another page
+    // Navigates to page for Vertretungsplan
     await driver.get("https://prmpul.eltern-portal.org/service/vertretungsplan");
 
-     // Get the table
+     // Get and return the table
     let table = await driver.findElement(By.className("table"));
-     htmlString = await table.getAttribute('outerHTML'); // Update htmlString
-
-    console.log(htmlString);
+    htmlString = await table.getAttribute('outerHTML');
     // Close the WebDriver
     await driver.quit();
-
+    return htmlString;
 }
 
-// scrapeWebsite();
-
+// put the table into the response
 app.get('/table', async (req, res) => {
     try {
-        await scrapeWebsite();
-        console.log('Sending HTML:', htmlString);
+        let htmlString=await scrapeWebsite();
         res.send(htmlString);
     } catch (error) {
         console.error('Error scraping website:', error);
@@ -59,6 +55,7 @@ app.get('/table', async (req, res) => {
     }
 });
 
+// Give a message to the user
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
