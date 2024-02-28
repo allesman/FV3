@@ -31,7 +31,8 @@
 
 <div class="flex justify-center mt-20">
     {#if tableHTML === ''}
-        <p class="text-[#84ffc9] select-none">Loading...</p>
+        <!-- <p class="text-[#84ffc9] select-none">Loading...</p> -->
+        <span class="loading loading-dots loading-lg bg-[#84ffc9]"></span>
     {:else}
         <table class="table-lg table table-zebra outline-dashed outline-[#84ffc9] text-white font-semibold size-32">
             {@html tableHTML}
