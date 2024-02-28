@@ -3,14 +3,15 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
+require('dotenv').config();
 const secretValue = process.env.DEFAULT_EMAIL;
 console.log(secretValue);
+const password = process.env.DEFAULT_PW;
+const email = process.env.DEFAULT_EMAIL;
+
 var webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 By = webdriver.By;
-
-const password = 'WdNnE1969!';
-const email = 'julia.rehbinder@gmail.com';
 
 // Enable all CORS requests
 app.use(cors());

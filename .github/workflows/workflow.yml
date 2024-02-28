@@ -16,3 +16,5 @@ jobs:
       - name: Access Secret
         run: |
           echo "The secret value is ${{ secrets.DEFAULT_EMAIL }}"
+          node scraper.cjs
+          
