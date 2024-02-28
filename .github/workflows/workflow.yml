@@ -16,5 +16,17 @@ jobs:
       - name: Access Secret
         run: |
           echo "The secret value is ${{ secrets.DEFAULT_EMAIL }}"
-          node scraper.cjs
-          
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Backend
+        run: node scraper.cjs
+
+      - name: Run Frontend
+        run: npm run dev
