@@ -4,8 +4,8 @@ const app = express();
 const port = 3000;
 
 require('dotenv').config();
-const secretValue = process.env.DEFAULT_EMAIL;
-console.log(secretValue);
+// const secretValue = process.env.DEFAULT_EMAIL;
+// console.log(secretValue);
 const password = process.env.DEFAULT_PW;
 const email = process.env.DEFAULT_EMAIL;
 
@@ -16,7 +16,7 @@ By = webdriver.By;
 // Enable all CORS requests
 app.use(cors());
 
-async function scrapeWebsite() {
+async function scrapeWebsite(what) {
 	// Set up the WebDriver
 	var driver = new webdriver.Builder()
 		.forBrowser('chrome')
@@ -37,20 +37,37 @@ async function scrapeWebsite() {
 
 	// Navigates to page for Vertretungsplan
 	await driver.get('https://prmpul.eltern-portal.org/service/vertretungsplan');
-
-	// Get and return the table
-	let table = await driver.findElement(By.className('table'));
-	htmlString = await table.getAttribute('outerHTML');
+	console.log(what);
+	let output = 'balls';
+	if (what == 'table') {
+		// Get and return the table
+		let table = await driver.findElement(By.className('table'));
+		output = await table.getAttribute('outerHTML');
+	} else if (what == 'time') {
+		// Get time of last update
+		output = await driver.findElement(By.xpath('/html/body/div/div[2]/div/div[2]')).getText();
+	}
+	console.log(output);
 	// Close the WebDriver
 	await driver.quit();
-	return htmlString;
+	return output;
 }
 
 // put the table into the response
 app.get('/table', async (req, res) => {
 	try {
-		let htmlString = await scrapeWebsite();
+		let htmlString = await scrapeWebsite('table');
 		res.send(htmlString);
+		console.log(htmlString);
+	} catch (error) {
+		console.error('Error scraping website:', error);
+		res.status(500).send('Error scraping website');
+	}
+});
+app.get('/time', async (req, res) => {
+	try {
+		let time = await scrapeWebsite('time');
+		res.send(time);
 	} catch (error) {
 		console.error('Error scraping website:', error);
 		res.status(500).send('Error scraping website');

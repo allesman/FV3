@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     let tableHTML = '';
+    let time="";
 
     onMount(async () => {
         console.log('Fetching table HTML...');
@@ -9,8 +10,15 @@
             console.error('Error fetching table HTML:', response.statusText);
             return;
         }
+        console.log("Hello");
         tableHTML = await response.text();
-        console.log('Received table HTML:', tableHTML);
+        const response2 = await fetch('http://localhost:3000/time');
+        if (!response2.ok) {
+            console.error('Error fetching table HTML:', response.statusText);
+            return;
+        }
+        time = await response2.text();
+        console.log('Received table:', tableHTML);
     });
 </script>
 <div>
@@ -29,14 +37,17 @@
     </div>
 <h1 class="text-[100px] flex justify-center mx-36 font-extrabold m-10 text-[#84ffc9] drop-shadow-[4px_4px_0px_rgba(0,60,0,2.5)] select-none">Vertretungsplan</h1>
 
+
+{#if tableHTML === ''}
 <div class="flex justify-center mt-20">
-    {#if tableHTML === ''}
         <!-- <p class="text-[#84ffc9] select-none">Loading...</p> -->
-        <span class="loading loading-dots loading-lg bg-[#84ffc9]"></span>
+        <span class="loading loading-dots loading-lg bg-[#84ffc9]"></span></div>
     {:else}
-        <table class="table-lg table table-zebra outline-dashed outline-[#84ffc9] text-white font-semibold size-32">
-            {@html tableHTML}
-        </table>
+    <div class="flex justify-center mt-20">
+            <table class="table-lg table table-zebra outline-dashed outline-[#84ffc9] text-white font-semibold size-32">
+                {@html tableHTML}
+            </table>
+        </div>
+        <p class="flex justify-center m-14 text-[#62b08e] ">{time}</p>
     {/if}
-</div>
 </div>
