@@ -42,6 +42,7 @@
 		"@capacitor/android": "^5.7.0",
 		"@capacitor/core": "^5.7.0",
 		"@capacitor/ios": "^5.7.0",
+		"@capacitor/push-notifications": "^5.1.1",
 		"chromedriver": "^122.0.3",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.5",

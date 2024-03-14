@@ -1,0 +1,9 @@
+{
+	"appId": "com.allesman.fv3",
+	"appName": "Earlybird",
+	"webDir": "build",
+	"server": {
+		"androidScheme": "https"
+	},
+	"bundledWebRuntime": false
+}

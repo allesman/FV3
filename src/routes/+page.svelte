@@ -1,9 +1,17 @@
 <script>
     import { onMount } from 'svelte';
+    import { PushNotifications } from '@capacitor/push-notifications';
+    // import pushNotifications from '$lib/pushNotifications';
+
+    // import { onMount } from 'svelte';
     let tableHTML = '';
     let time="";
-
     onMount(async () => {
+        await addListeners();
+        await registerNotifications();
+        await getDeliveredNotifications();
+
+
         console.log('Fetching table HTML...');
         const response = await fetch('http://localhost:3000/table');
         if (!response.ok) {
@@ -20,6 +28,76 @@
         time = await response2.text();
         console.log('Received table:', tableHTML);
     });
+
+
+
+const addListeners = async () => {
+	await PushNotifications.addListener('registration', (token) => {
+		console.info('Registration token: ', token.value);
+	});
+
+	await PushNotifications.addListener('registrationError', (err) => {
+		console.error('Registration error: ', err.error);
+	});
+
+	await PushNotifications.addListener('pushNotificationReceived', (notification) => {
+		console.log('Push notification received: ', notification);
+	});
+
+	await PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+		console.log(
+			'Push notification action performed',
+			notification.actionId,
+			notification.inputValue
+		);
+	});
+
+};
+
+const registerNotifications = async () => {
+	let permStatus = await PushNotifications.checkPermissions();
+
+	if (permStatus.receive === 'prompt') {
+		permStatus = await PushNotifications.requestPermissions();
+	}
+
+	if (permStatus.receive !== 'granted') {
+		throw new Error('User denied permissions!');
+	}
+
+	await PushNotifications.register();
+};
+
+const getDeliveredNotifications = async () => {
+	const notificationList = await PushNotifications.getDeliveredNotifications();
+	console.log('delivered notifications', notificationList);
+};
+const sendTestNotification = async () => {
+    // Simulate sending a test push notification from the client (not recommended in production)
+    // In a real scenario, this logic would be on the server side
+    await PushNotifications.createChannel({
+      id: 'test-channel',
+      name: 'Test Channel',
+      description: 'Channel for test notifications',
+    });
+
+    await PushNotifications.schedule({
+      notifications: [
+        {
+          title: 'Test Notification',
+          body: 'This is a test push notification.',
+          id: 1,
+          channelId: 'test-channel',
+        },
+      ],
+    });
+
+    console.log('Test push notification scheduled.');
+
+
+    // es gibt sogar so average männer die haben so below average männer
+};
+
 </script>
 <div>
     <div class="absolute right-0 mr-14">
@@ -50,4 +128,7 @@
         </div>
         <p class="flex justify-center m-14 text-[#62b08e] ">{time}</p>
     {/if}
+    <button class="btn btn-outline btn-primary" on:click={sendTestNotification}>
+        Send Test Push Notification
+    </button>
 </div>

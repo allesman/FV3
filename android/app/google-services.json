@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "389314452434",
+    "project_id": "earlybird-59dfc",
+    "storage_bucket": "earlybird-59dfc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389314452434:android:d4c905a3b9e0888865460b",
+        "android_client_info": {
+          "package_name": "com.allesman.fv3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk2e6gsiWxcv1z66eD-AFHAyi_kbCaq0w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
